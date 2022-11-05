@@ -4,8 +4,28 @@
 #### Добавление пользователей в домен контроллера
 
 Основные команды при работе с Power Shell
-1. Список допустимых устройств
-Изменяем атрибут Logon Workstations с помощью PowerShell. Список компьютеров, на которые разрешено входить пользователю хранится в атрибуте пользователя в AD – LogonWorkstations. 
+- Создание нового пользовкателя
+```ps1
+<# This is a comment #>
+
+New-ADUser `
+ -SamAccountName TanshTelb3 -Name TanshTelb333 -GivenName Tansh3 `
+ -Surname Telb -DisplayName 'Tansh Telb3' -Path 'CN=Users,DC=tansh,DC=kz' `
+ -CannotChangePassword $true  -ChangePasswordAtLogon $false -City 'Almaty'  `
+ -State 'Almaty’ -Country RK -Department ‘Accounting’ -Title ’Saler' `
+ -EmailAddress 'telbayeva@tansh.kz' -Enabled $true -AccountPassword (Read-Host -AsSecureString "12345Zxc")
+```
+- Удаление пользователя
+```ps1
+Remove-ADUser -Identity TanshTelb3
+```
+- Сброс пароля
+```ps1
+Set-ADAccountPassword -Identity 'CN=Elisa Daugherty,OU=Accounts,DC=Fabrikam,DC=com' `
+-Reset -NewPassword (ConvertTo-SecureString -AsPlainText "p@ssw0rd" -Force)
+```
+
+1. Список допустимых устройств Logon Workstations (Список компьютеров, на которые разрешено входить пользователю хранится в атрибуте пользователя в AD) 
 
 2. Список таймзон
 ```ps1
