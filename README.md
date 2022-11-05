@@ -100,14 +100,11 @@ Get-ADPrincipalGroupMembership tanshName | select name
 ```ps1
 New-ADOrganizationalUnit -Name IT_Department;
 
-
 New-ADFineGrainedPasswordPolicy -MinPasswordLength 8 -Name standardPolicy -Precedence 20;
 New-ADFineGrainedPasswordPolicy -MinPasswordLength 12 -Name hardPolicy -Precedence 30;
 
-
 New-ADGroup IT-users -Path 'OU=IT_Department,DC=tansh,DC=kz' -GroupScope DomainLocal;
 New-ADGroup IT-admins -Path 'OU=IT_Department,DC=tansh,DC=kz' -GroupScope DomainLocal;
-
 
 Add-ADFineGrainedPasswordPolicySubject "standardPolicy" -Subjects " IT-users";
 Add-ADFineGrainedPasswordPolicySubject "hardPolicy" -Subjects " IT-admins";
@@ -121,11 +118,8 @@ Add-ADFineGrainedPasswordPolicySubject -Identity standardPolicy -Subjects fadria
 Set-ADUser -LogonWorkstations test1 -Identity fadriana;
 Set-ADUser -Identity fadriana -HomeDirectory "C:\Users\fadriana";
 
-
 Get-ADUser -Identity fadriana -Properties LogonWorkstations;
 Get-ADUser -Identity fadriana -Properties *;
 ```
 Подробнее про установку атрибутов пользователю
-
 https://learn.microsoft.com/en-us/powershell/module/activedirectory/set-aduser?view=winserver2012r2-ps&redirectedfrom=MSDN
-
