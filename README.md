@@ -3,7 +3,12 @@
 
 #### Добавление пользователей в домен контроллера
 
-Основные команды при работе с Power Shell
+### Основные команды при работе с Power Shell
+- Создать подразделения
+```ps1
+New-ADOrganizationalUnit -Name IT_Department;
+```
+### Пользователи
 - Создание нового пользовкателя
 ```ps1
 <# This is a comment #>
@@ -15,6 +20,10 @@ New-ADUser `
  -State 'Almaty’ -Country RK -Department ‘Accounting’ -Title ’Saler' `
  -EmailAddress 'telbayeva@tansh.kz' -Enabled $true -AccountPassword (Read-Host -AsSecureString "12345Zxc")
 ```
+- Выбрать пользователя
+```ps1
+Get-ADUser "CN=tansh1,CN=Users,DC=tansh,DC=kz"
+```
 - Удаление пользователя
 ```ps1
 Remove-ADUser -Identity TanshTelb3
@@ -24,78 +33,62 @@ Remove-ADUser -Identity TanshTelb3
 Set-ADAccountPassword -Identity 'CN=Elisa Daugherty,OU=Accounts,DC=Fabrikam,DC=com' `
 -Reset -NewPassword (ConvertTo-SecureString -AsPlainText "p@ssw0rd" -Force)
 ```
+### Other commands
+- Список допустимых устройств Logon Workstations (Список компьютеров, на которые разрешено входить пользователю хранится в атрибуте пользователя в AD) 
 
-1. Список допустимых устройств Logon Workstations (Список компьютеров, на которые разрешено входить пользователю хранится в атрибуте пользователя в AD) 
-
-2. Список таймзон
+- Список таймзон
 ```ps1
 Get-TimeZone -ListAvailable | Where-Object {$_.Id -like "*UTC*"}
 ```
 
-3. Политика паролей
+### Политика паролей
 https://winitpro.ru/index.php/2018/10/26/politika-parolej-uchetnyx-zapisej-v-active-directory/
 
-3.1 Получить политику по умолчанию
+- Получить политику по умолчанию
 ```ps1
 Get-ADDefaultDomainPasswordPolicy
 ```
-
-
-3.2 Создать свою политику паролей
-
+- Создать свою политику паролей
 Precedence. Данный атрибут определяет приоритет данной политики паролей. Если на пользователя AD действуют несколько политик PSO, то к нему будет применена политика с меньшим значением в поле Precedence.
 ```ps1
 New-ADFineGrainedPasswordPolicy -MinPasswordLength 3 -Name simplePolicy -Precedence 20;
 ```
-
-3.3 Получить установленную для пользователя политику паролей
+- Получить установленную для пользователя политику паролей
 ```ps1
 Get-ADUserResultantPasswordPolicy -Identity tanshName;
-
 Add-ADFineGrainedPasswordPolicySubject "simplePolicy" -Subjects "tanshName"
 ```
-
-4. Выбрать пользователя
-```ps1
-Get-ADUser "CN=tansh1,CN=Users,DC=tansh,DC=kz"
-```
-
-5. Создать подразделения
-```ps1
-New-ADOrganizationalUnit -Name IT_Department;
-```
-6. Список команд для работы с группами
+### Группы
+- Список команд для работы с группами
 ```ps1
 Get-Command -Module ActiveDirectory -Name "*Group*"
 ```
-6.1 Получить список всех групп
-
+- Получить список всех групп
 Параметром GroupScope можно задать один из следующих типов групп:
 ```ps1
 0 = DomainLocal
 1 = Global
 2 = Universal
 ```
-6.2 Создание группы внутри подразделения
+- Создание группы внутри подразделения
 ```ps1
 New-ADGroup internsGroup -Path 'OU=IT,DC=tansh,DC=kz' -GroupScope DomainLocal;
 
 Get-ADGroup -Filter {Name -like "*interns*"};
 ```
-6.3 Список участников группы
+- Список участников группы
 ```ps1
 Get-ADGroupMember -Identity Administrators
 ```
-6.4 Добавить пользователя в группу
+- Добавить пользователя в группу
 ```ps1
 Add-ADGroupMember -Identity IT-admins -Members meave, rachel
 ```
-6.5 Список групп в которых состоит пользователь
+- Список групп в которых состоит пользователь
 ```ps1
 Get-ADPrincipalGroupMembership tanshName | select name
 ```
-7. Cоздание OU
-
+7. Cоздание OU/Группы и пользователя внутри группы
 ```ps1
 New-ADOrganizationalUnit -Name IT_Department;
 
@@ -123,7 +116,6 @@ Set-ADUser -Identity fadriana -HomeDirectory "C:\Users\fadriana";
 
 Get-ADUser -Identity fadriana -Properties LogonWorkstations;
 Get-ADUser -Identity fadriana -Properties *;
-
 ```
 Подробнее про установку атрибутов пользователю
 
