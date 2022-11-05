@@ -1,15 +1,15 @@
 # power-shell-commands
 Команды и некоторые настройки Windows Power Shell
 
-#### Добавление пользователей в домен контроллера
-
 ### Основные команды при работе с Power Shell
 - Создать подразделения
 ```ps1
 New-ADOrganizationalUnit -Name IT_Department;
 ```
+<hr>
+
 ### Пользователи
-- Создание нового пользовкателя
+- Создание нового пользовкателя (Добавление пользователей в домен контроллера)
 ```ps1
 <# This is a comment #>
 
@@ -33,6 +33,8 @@ Remove-ADUser -Identity TanshTelb3
 Set-ADAccountPassword -Identity 'CN=Elisa Daugherty,OU=Accounts,DC=Fabrikam,DC=com' `
 -Reset -NewPassword (ConvertTo-SecureString -AsPlainText "p@ssw0rd" -Force)
 ```
+<hr>
+
 ### Other commands
 - Список допустимых устройств Logon Workstations (Список компьютеров, на которые разрешено входить пользователю хранится в атрибуте пользователя в AD) 
 
@@ -40,6 +42,7 @@ Set-ADAccountPassword -Identity 'CN=Elisa Daugherty,OU=Accounts,DC=Fabrikam,DC=c
 ```ps1
 Get-TimeZone -ListAvailable | Where-Object {$_.Id -like "*UTC*"}
 ```
+<hr>
 
 ### Политика паролей
 https://winitpro.ru/index.php/2018/10/26/politika-parolej-uchetnyx-zapisej-v-active-directory/
@@ -58,6 +61,8 @@ New-ADFineGrainedPasswordPolicy -MinPasswordLength 3 -Name simplePolicy -Precede
 Get-ADUserResultantPasswordPolicy -Identity tanshName;
 Add-ADFineGrainedPasswordPolicySubject "simplePolicy" -Subjects "tanshName"
 ```
+<hr>
+
 ### Группы
 - Список команд для работы с группами
 ```ps1
@@ -88,7 +93,10 @@ Add-ADGroupMember -Identity IT-admins -Members meave, rachel
 ```ps1
 Get-ADPrincipalGroupMembership tanshName | select name
 ```
-7. Cоздание OU/Группы и пользователя внутри группы
+<hr>
+
+### Cоздание OU/Группы и пользователя внутри группы
+
 ```ps1
 New-ADOrganizationalUnit -Name IT_Department;
 
