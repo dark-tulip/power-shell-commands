@@ -2,3 +2,110 @@
 Команды и некоторые настройки Windows Power Shell
 
 #### Добавление пользователей в домен контроллера
+
+Основные команды при работе с Power Shell
+1. Список допустимых устройств
+Изменяем атрибут Logon Workstations с помощью PowerShell. Список компьютеров, на которые разрешено входить пользователю хранится в атрибуте пользователя в AD – LogonWorkstations. 
+
+2. Список таймзон
+```ps1
+Get-TimeZone -ListAvailable | Where-Object {$_.Id -like "*UTC*"}
+```
+
+3. Политика паролей
+https://winitpro.ru/index.php/2018/10/26/politika-parolej-uchetnyx-zapisej-v-active-directory/
+
+3.1 Получить политику по умолчанию
+```ps1
+Get-ADDefaultDomainPasswordPolicy
+```
+
+
+3.2 Создать свою политику паролей
+
+Precedence. Данный атрибут определяет приоритет данной политики паролей. Если на пользователя AD действуют несколько политик PSO, то к нему будет применена политика с меньшим значением в поле Precedence.
+```ps1
+New-ADFineGrainedPasswordPolicy -MinPasswordLength 3 -Name simplePolicy -Precedence 20;
+```
+
+3.3 Получить установленную для пользователя политику паролей
+```ps1
+Get-ADUserResultantPasswordPolicy -Identity tanshName;
+
+Add-ADFineGrainedPasswordPolicySubject "simplePolicy" -Subjects "tanshName"
+```
+
+4. Выбрать пользователя
+```ps1
+Get-ADUser "CN=tansh1,CN=Users,DC=tansh,DC=kz"
+```
+
+5. Создать подразделения
+```ps1
+New-ADOrganizationalUnit -Name IT_Department;
+```
+6. Список команд для работы с группами
+```ps1
+Get-Command -Module ActiveDirectory -Name "*Group*"
+```
+6.1 Получить список всех групп
+
+Параметром GroupScope можно задать один из следующих типов групп:
+```ps1
+0 = DomainLocal
+1 = Global
+2 = Universal
+```
+6.2 Создание группы внутри подразделения
+```ps1
+New-ADGroup internsGroup -Path 'OU=IT,DC=tansh,DC=kz' -GroupScope DomainLocal;
+
+Get-ADGroup -Filter {Name -like "*interns*"};
+```
+6.3 Список участников группы
+```ps1
+Get-ADGroupMember -Identity Administrators
+```
+6.4 Добавить пользователя в группу
+```ps1
+Add-ADGroupMember -Identity IT-admins -Members meave, rachel
+```
+6.5 Список групп в которых состоит пользователь
+```ps1
+Get-ADPrincipalGroupMembership tanshName | select name
+```
+7. Cоздание OU
+
+```ps1
+New-ADOrganizationalUnit -Name IT_Department;
+
+
+New-ADFineGrainedPasswordPolicy -MinPasswordLength 8 -Name standardPolicy -Precedence 20;
+New-ADFineGrainedPasswordPolicy -MinPasswordLength 12 -Name hardPolicy -Precedence 30;
+
+
+New-ADGroup IT-users -Path 'OU=IT_Department,DC=tansh,DC=kz' -GroupScope DomainLocal;
+New-ADGroup IT-admins -Path 'OU=IT_Department,DC=tansh,DC=kz' -GroupScope DomainLocal;
+
+
+Add-ADFineGrainedPasswordPolicySubject "standardPolicy" -Subjects " IT-users";
+Add-ADFineGrainedPasswordPolicySubject "hardPolicy" -Subjects " IT-admins";
+
+New-ADUser -Name fadriana -EmailAddress fadriana@tansh.kz -CannotChangePassword $false -DisplayName "Franziska Adriana" -UserPrincipalName fadriana@tansh.kz;
+
+Add-ADGroupMember -Identity IT-users -Members fadriana;
+
+Add-ADFineGrainedPasswordPolicySubject -Identity standardPolicy -Subjects fadriana;
+
+Set-ADUser -LogonWorkstations test1 -Identity fadriana;
+Set-ADUser -Identity fadriana -HomeDirectory "C:\Users\fadriana";
+
+
+Get-ADUser -Identity fadriana -Properties LogonWorkstations;
+Get-ADUser -Identity fadriana -Properties *;
+
+```
+Подробнее про установку атрибутов пользователю
+
+https://learn.microsoft.com/en-us/powershell/module/activedirectory/set-aduser?view=winserver2012r2-ps&redirectedfrom=MSDN
+
