@@ -123,3 +123,9 @@ Get-ADUser -Identity fadriana -Properties *;
 ```
 Подробнее про установку атрибутов пользователю
 https://learn.microsoft.com/en-us/powershell/module/activedirectory/set-aduser?view=winserver2012r2-ps&redirectedfrom=MSDN
+
+# Audit
+### получить полный список GAP (глобальной политики аудита, Global Audit Policy) с установленными параметрами.
+```ps1
+auditpol /list /subcategory:*
+```
