@@ -129,13 +129,14 @@ https://learn.microsoft.com/en-us/powershell/module/activedirectory/set-aduser?v
 Win+R -> SystemPropertiesAdvanced.exe
 ```
 <hr>
+
 ## Audit
-### Можно через
+Можно через
 ```
 gpedit.msc
 ```
-### получить полный список GAP (глобальной политики аудита, Global Audit Policy) с установленными параметрами. Cписок всех доступных подкатегорий аудита
+### Global Audit Polic получить полный список 
+Глобальной политики аудита, Global Audit Policy с установленными параметрами. Cписок всех доступных подкатегорий аудита
 ```ps1
 auditpol /list /subcategory:*
 ```
-### 
